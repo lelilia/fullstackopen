@@ -6,7 +6,7 @@ const Entries = ({ entries, deleteButton }) => {
     <ul>
       {entries.map((entry) => 
         <Entry 
-          key = {entry.name} 
+          key = {entry.id} 
           entry = {entry} 
           deleteButton = {deleteButton}
         />

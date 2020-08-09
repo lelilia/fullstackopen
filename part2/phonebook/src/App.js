@@ -9,9 +9,10 @@ const Notification = ({ message }) => {
   if (message === null) {
     return null
   }
+  const className = `message ${message.alert}`
   return (
-    <div className = "message">
-      {message}
+    <div className = {className} >
+      {message.text}
     </div>
   )
 }
@@ -33,12 +34,18 @@ const App = () => {
 
   const displayMessage = (name, change) => {
     if (change === "added") {
-      setNotificationMessage(`Added ${name} sucessfully.`)
+      setNotificationMessage({text: `Added ${name} sucessfully.`, alert: "green"})
+    }
+    else if (change === "updated") {
+      setNotificationMessage({text: `Updated number for ${name} sucessfully.`, alert: "green"})
+    }
+    else if (change === "deleted") {
+      setNotificationMessage({text: `Deleted number for ${name} sucessfully.`, alert: "green"})
     }
     else {
-      setNotificationMessage(`Updated number for ${name} sucessfully.`)
+      setNotificationMessage({text: `Information of ${name} has already been removed from server`, alert: "red"})
     }
-    setTimeout(()=> setNotificationMessage(null), 2000)
+    setTimeout(()=> setNotificationMessage(null), 5000)
   }
 
   const addEntry = (event) => {
@@ -59,6 +66,10 @@ const App = () => {
             setEntries(entries.map(entry => entry.id !== id ? entry : returnedEntry))
             displayMessage(returnedEntry.name, "updated")
           })
+          .catch(error => {
+            displayMessage(entry.name, "error")
+            setEntries(entries.filter(e => e.id !== entry.id))
+          })
       }
     }
     else {
@@ -73,6 +84,7 @@ const App = () => {
           setEntries(entries.concat(returnedEntry))
           displayMessage(returnedEntry.name, "added")
         })
+        .catch(error => console.log(error))
     }
     setNewNumber('')
     setNewName('')
@@ -85,6 +97,11 @@ const App = () => {
         .deleteEntry(entry.id)
         .then(() => {
           setEntries(entries.filter(entry => entry.id !== id))
+          displayMessage(entry.name, "deleted")
+        })
+        .catch(() => {
+          displayMessage(entry.name, "error")
+          setEntries(entries.filter(e => e.id !== entry.id))
         })
     }
   }
@@ -102,7 +119,7 @@ const App = () => {
   return (
     <div>
       <Header text="Phonebook" />
-      <Notification message = {notificationMessage}/>
+      <Notification message = {notificationMessage} alert = "green"/>
       <Filter filter={filter} onChange={handleFilterChange} />
       <Header text="add a new" />
       <NewEntryForm
