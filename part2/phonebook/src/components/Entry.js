@@ -1,8 +1,11 @@
 import React from 'react'
 
-const Entry = ({ entry }) => {
+const Entry = ({ entry, deleteButton }) => {
   return (
-    <li>{entry.name} {entry.number}</li>
+    <li>
+      {entry.name} {entry.number}
+      <button onClick = {() => deleteButton(entry)}>delete</button>
+    </li>
   )
 }
 
