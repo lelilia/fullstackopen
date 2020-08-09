@@ -5,13 +5,23 @@ import Entries from './components/Entries'
 import Header from './components/Header'
 import entryServices from './services/entries'
 
-
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className = "message">
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [entries, setEntries] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [ notificationMessage, setNotificationMessage ] = useState(null)
 
   useEffect(() => {
     entryServices
@@ -20,6 +30,16 @@ const App = () => {
         setEntries(initialEntries)
       })
   }, [])
+
+  const displayMessage = (name, change) => {
+    if (change === "added") {
+      setNotificationMessage(`Added ${name} sucessfully.`)
+    }
+    else {
+      setNotificationMessage(`Updated number for ${name} sucessfully.`)
+    }
+    setTimeout(()=> setNotificationMessage(null), 2000)
+  }
 
   const addEntry = (event) => {
     event.preventDefault()
@@ -37,9 +57,9 @@ const App = () => {
           .update(id, changedEntry)
           .then(returnedEntry => {
             setEntries(entries.map(entry => entry.id !== id ? entry : returnedEntry))
+            displayMessage(returnedEntry.name, "updated")
           })
       }
-      
     }
     else {
       const newEntryObject = {
@@ -51,7 +71,7 @@ const App = () => {
         .create(newEntryObject)
         .then(returnedEntry => {
           setEntries(entries.concat(returnedEntry))
-
+          displayMessage(returnedEntry.name, "added")
         })
     }
     setNewNumber('')
@@ -81,8 +101,8 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={deleteEntry} >delete</button>
       <Header text="Phonebook" />
+      <Notification message = {notificationMessage}/>
       <Filter filter={filter} onChange={handleFilterChange} />
       <Header text="add a new" />
       <NewEntryForm
