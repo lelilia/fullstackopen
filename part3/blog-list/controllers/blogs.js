@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const { response } = require('express')
 
 blogsRouter.get('/', (request, response) => {
   Blog
@@ -13,7 +12,7 @@ blogsRouter.get('/', (request, response) => {
 blogsRouter.post('/', (request, response) => {
   const blog = new Blog(request.body)
 
-  blog  
+  blog
     .save()
     .then(result => {
       response.status(201).json(result)
