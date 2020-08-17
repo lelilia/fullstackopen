@@ -42,23 +42,23 @@ describe('check inital blogs', () => {
     response.body.map(blog => expect(blog.id).toBeDefined())
   })
 })
+let token
+beforeEach(async () => {
+  await User.deleteMany({})
 
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'Anna', passwordHash })
+
+  await user.save()
+
+  const response = await api
+    .post('/api/login')
+    .send({ username: 'Anna', password: 'sekret' })
+    .expect(200)
+  token = response.body.token
+})
 describe('add new blogs', () => {
-  let token
-  beforeEach(async () => {
-    await User.deleteMany({})
 
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'Anna', passwordHash })
-
-    await user.save()
-
-    const response = await api
-      .post('/api/login')
-      .send({ username: 'Anna', password: 'sekret' })
-      .expect(200)
-    token = response.body.token
-  })
   test('succeeds if data and token valid', async () => {
     const newBlog = {
       title: 'new blog',
@@ -112,55 +112,42 @@ describe('add new blogs', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
-/*
-  test('fails with error code 400 without author', async () => {
-    const newBlog = {
-      title: 'where did this come from'
-    }
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400)
-    const blogsAtEnd = await helper.blogsInDb()
-
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
-  })
-
-  test('fails with error code 400 if title is missing', async () => {
-    const newBlog = {
-      author: 'didnt write anything'
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400)
-
-    const blogsAtEnd = await helper.blogsInDb()
-
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
-  })*/
 })
 
-/*
+
 describe('testing deletion', () => {
-  test('sucess if valid id', async () => {
+  let blogId
+  beforeEach(async () => {
+    newBlog = {
+      title: 'to be deleted',
+      author: 'someone'
+    }
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+    blogId = response.body.id
+  })
+  test('sucess if valid id and token', async () => {
     const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+
+    console.log(await Blog.findById(blogId))
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${blogId}`)
+      .set('Authorization', `bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
     const titles = blogsAtEnd.map(blog => blog.title)
 
     expect(titles).not.toContain(blogToDelete.title)
   })
 })
-*/
+
 /*
 describe('testing updating', () => {
   test('update valid blog with likes', async () => {
