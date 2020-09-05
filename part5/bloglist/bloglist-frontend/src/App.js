@@ -31,8 +31,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
+    } 
+    catch (exception) {
       console.log('Wrong credentials')
+      displayMessage("wrong username or password", "red")
       
     }
   }
@@ -58,8 +60,7 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
       })
       .catch(error => {
-        console.log("tst",error.message)
-        displayMessage(error.message, "red")
+        displayMessage(error.response.data.error, "red")
 
       })
     setNewTitle('')
@@ -72,6 +73,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
     setUser(null)
+    displayMessage(`${user.name} sucessfully logged out.`)
   }
 
   useEffect(() => {

@@ -8,7 +8,7 @@ const Loggedin = (props) => (
     <h2>blogs</h2>
     <p>
       {props.user.name} logged in
-    <button onClick={props.idhandleLogout}>logout</button>
+    <button onClick={props.handleLogout}>logout</button>
     </p>
     <NewBlog 
       addBlog = {props.addBlog}
