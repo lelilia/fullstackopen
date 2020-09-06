@@ -1,31 +1,29 @@
 import React from 'react'
 import Blog from './Blog'
 import NewBlog from './NewBlog'
+import Toggleable from './Toggleable'
 
-const Loggedin = (props) => (
+const Loggedin = ({ createBlog, user, handleLogout, blogs, blogFormRef }) => {
+  
+  return(
 
   <div>
     <h2>blogs</h2>
     <p>
-      {props.user.name} logged in
-    <button onClick={props.handleLogout}>logout</button>
+      {user.name} logged in
+    <button onClick={handleLogout}>logout</button>
     </p>
-    <NewBlog 
-      addBlog = {props.addBlog}
-      newTitle = {props.newTitle}
-      handleTitleChange = {props.handleTitleChange}
-      newAuthor = {props.newAuthor}
-      handleAuthorChange = {props.handleAuthorChange}
-      newUrl = {props.newUrl}
-      handleUrlChange = {props.handleUrlChange}
-    />
-
+    <Toggleable buttonLabel="create new blog" ref = {blogFormRef}>
+      <NewBlog
+        createBlog ={createBlog}
+      />
+    </Toggleable>
     {
-      props.blogs.map(blog =>
+      blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )
     }
   </div>
-)
+)}
 
 export default Loggedin

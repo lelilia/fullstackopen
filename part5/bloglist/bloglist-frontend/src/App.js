@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -11,9 +11,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+
+  const blogFormRef = useRef()
+  
   const [notificationMessage, setNotificationMessage] = useState(null)
 
   const handleLogin = async (event) => {
@@ -39,33 +39,20 @@ const App = () => {
     }
   }
 
-  const handleTitleChange = (event) => setNewTitle(event.target.value)
 
-  const handleAuthorChange = (event) => setNewAuthor(event.target.value)
-
-  const handleUrlChange = (event) => setNewUrl(event.target.value)
-
-  const addBlog = (event) => {
-    event.preventDefault()
-    const newBlogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const addBlog = (newBlogObject) => {
+    
     blogService
-      .create(newBlogObject)
-      .then(returnedBlog => {
-        displayMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added.`)
-        setBlogs(blogs.concat(returnedBlog))
-      })
-      .catch(error => {
-        displayMessage(error.response.data.error, "red")
+    .create(newBlogObject)
+    .then(returnedBlog => {
+      blogFormRef.current.toggleVisibility()
+      displayMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added.`)
+      setBlogs(blogs.concat(returnedBlog))
+    })
+    .catch(error => {
+      displayMessage(error.response.data.error, "red")
 
-      })
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    })
   }
 
   const handleLogout = async (event) => {
@@ -109,15 +96,10 @@ const App = () => {
         /> :
         <Loggedin
           user = {user}
-          handleLogout = {handleLogout}
           blogs = {blogs}
-          newTitle = {newTitle}
-          handleTitleChange = {handleTitleChange}
-          newAuthor = {newAuthor}
-          handleAuthorChange = {handleAuthorChange}
-          newUrl = {newUrl}
-          handleUrlChange = {handleUrlChange}
-          addBlog = {addBlog}
+          createBlog = {addBlog}
+          handleLogout = {handleLogout}
+          blogFormRef = {blogFormRef}
         />
       }
     </div>
