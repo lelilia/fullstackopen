@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LoginForm = ({ username, setUsername, handleLogin, password, setPassword}) => {
+const LoginForm = ({ username, setUsername, handleLogin, password, setPassword }) => {
 
 
   

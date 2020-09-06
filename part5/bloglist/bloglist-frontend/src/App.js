@@ -13,7 +13,11 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
-  
+
+  const blogSort = (blogs) => {
+    return(blogs.sort((a, b) => b.likes - a.likes))
+  }
+
   const [notificationMessage, setNotificationMessage] = useState(null)
 
   const handleLogin = async (event) => {
@@ -22,7 +26,7 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
-      
+
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
@@ -31,28 +35,42 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } 
+    }
     catch (exception) {
       console.log('Wrong credentials')
       displayMessage("wrong username or password", "red")
-      
+
     }
   }
 
+  const updateBlog = (id) => {
+
+    const blog = blogs.find(b => b.id === id)
+    
+    const changedBlog = { ...blog, likes: blog.likes + 1}
+  
+    blogService
+      .update(id, changedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogSort(blogs.map(blog => blog.id !== id ? blog : returnedBlog)))
+      })
+      .catch(error => {
+        displayMessage(error.response.data.error, "red")
+      })
+  }
 
   const addBlog = (newBlogObject) => {
-    
-    blogService
-    .create(newBlogObject)
-    .then(returnedBlog => {
-      blogFormRef.current.toggleVisibility()
-      displayMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added.`)
-      setBlogs(blogs.concat(returnedBlog))
-    })
-    .catch(error => {
-      displayMessage(error.response.data.error, "red")
 
-    })
+    blogService
+      .create(newBlogObject)
+      .then(returnedBlog => {
+        blogFormRef.current.toggleVisibility()
+        displayMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added.`)
+        setBlogs(blogs.concat(returnedBlog))
+      })
+      .catch(error => {
+        displayMessage(error.response.data.error, "red")
+      })
   }
 
   const handleLogout = async (event) => {
@@ -65,7 +83,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogSort(blogs))
     )
   }, [])
 
@@ -85,21 +103,22 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification ={notificationMessage} />
+      <Notification notification={notificationMessage} />
       {user === null ?
-        <LoginForm 
-          username = {username} 
-          setUsername =  {setUsername} 
-          handleLogin = {handleLogin} 
-          password = {password}
-          setPassword = {setPassword}
+        <LoginForm
+          username={username}
+          setUsername={setUsername}
+          handleLogin={handleLogin}
+          password={password}
+          setPassword={setPassword}
         /> :
         <Loggedin
-          user = {user}
-          blogs = {blogs}
-          createBlog = {addBlog}
-          handleLogout = {handleLogout}
-          blogFormRef = {blogFormRef}
+          user={user}
+          blogs={blogs}
+          createBlog={addBlog}
+          handleLogout={handleLogout}
+          blogFormRef={blogFormRef}
+          updateBlog = {updateBlog}
         />
       }
     </div>
