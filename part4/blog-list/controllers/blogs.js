@@ -66,6 +66,18 @@ blogsRouter.put('/:id', async (request, response) => {
 })
 */
 
+
+/* 
+notesRouter.put('/:id', async (request, response) => {
+  const body = request.body
+  const note = {
+    content: body.content,
+    important: body.important
+  }
+  const updatedNote = await Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  response.json(updatedNote)
+})
+*/
 blogsRouter.put('/:id', async (request, response) => {
   const body = request.body
   const blog = {
@@ -74,7 +86,9 @@ blogsRouter.put('/:id', async (request, response) => {
     url: body.url,
     likes: body.likes
   }
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  const updatedBlog = await Blog
+    .findByIdAndUpdate(request.params.id, blog, { new: true })
+    .populate('user', { url: 1, username: 1, name: 1 })
   response.json(updatedBlog)
 })
 
