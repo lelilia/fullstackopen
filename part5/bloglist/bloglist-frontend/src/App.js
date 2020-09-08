@@ -24,7 +24,7 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username, password
       })
 
       window.localStorage.setItem(
@@ -42,6 +42,8 @@ const App = () => {
 
     }
   }
+
+  
 
   const updateBlog = (id) => {
 
@@ -71,6 +73,19 @@ const App = () => {
       .catch(error => {
         displayMessage(error.response.data.error, "red")
       })
+  }
+
+  const removeBlog = (id) => {
+
+    blogService
+      .remove(id)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== id))
+      })
+      .catch(error => {
+        displayMessage(error.response.data.error, "red")
+      })
+
   }
 
   const handleLogout = async (event) => {
@@ -119,6 +134,7 @@ const App = () => {
           handleLogout={handleLogout}
           blogFormRef={blogFormRef}
           updateBlog = {updateBlog}
+          removeBlog = {removeBlog}
         />
       }
     </div>

@@ -3,7 +3,7 @@ import Blog from './Blog'
 import NewBlog from './NewBlog'
 import Toggleable from './Toggleable'
 
-const Loggedin = ({ createBlog, user, handleLogout, blogs, blogFormRef, updateBlog }) => {
+const Loggedin = ({ createBlog, user, handleLogout, blogs, blogFormRef, updateBlog, removeBlog }) => {
   
   return(
 
@@ -20,7 +20,13 @@ const Loggedin = ({ createBlog, user, handleLogout, blogs, blogFormRef, updateBl
     </Toggleable>
     {
       blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          updateBlog={updateBlog} 
+          removeBlog={removeBlog}
+          user = {user}
+        />
       )
     }
   </div>
