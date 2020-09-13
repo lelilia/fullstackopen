@@ -81,6 +81,7 @@ const App = () => {
       .remove(id)
       .then(() => {
         setBlogs(blogs.filter(blog => blog.id !== id))
+        
       })
       .catch(error => {
         displayMessage(error.response.data.error, "red")
@@ -119,6 +120,7 @@ const App = () => {
   return (
     <div>
       <Notification notification={notificationMessage} />
+      <h2>blogs</h2>
       {user === null ?
         <LoginForm
           username={username}

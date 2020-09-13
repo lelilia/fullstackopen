@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 
 const Blog = ({ blog, updateBlog, removeBlog, user }) => {
 
+  const userId = blog.user.id ? blog.user.id : blog.user
+
+
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -24,29 +27,29 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
     updateBlog(blog.id)
   }
 
-  const showWhenOwnEntry = { display: blog.user.id === user.id ? '' : 'none' }
+  const showWhenOwnEntry = { display: userId === user.id ? '' : 'none' }
 
   const deleteBlog = (event) => {
     event.preventDefault()
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       removeBlog(blog.id)
     }
-    
+
   }
 
   return (
 
-    <div style={blogStyle} id = {blog.id}>
-      {blog.title} {blog.author} <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
-      <div style={showWhenVisible}>
+    <div style={blogStyle} id={blog.id} className='blog'>
+      {blog.title} {blog.author} <button className='hideButton' onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
+      <div style={showWhenVisible} className = 'togglableContent'>
         {blog.url}
         <br />
-      likes {blog.likes} <button onClick={addLike}>like</button>
+      likes <span className="likes">{blog.likes}</span> <button className='likeButton' onClick={addLike}>like</button>
         <br />
         {blog.user.name}
         <br />
         <div style={showWhenOwnEntry}>
-          <button onClick={deleteBlog}>remove</button>
+          <button className='deleteButton' onClick={deleteBlog}>remove</button>
         </div>
       </div>
     </div>
