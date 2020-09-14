@@ -5,7 +5,11 @@ import Anecdote from './Anecdote'
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector(({filter, anecdotes}) => {
+    return filter === '' 
+      ? anecdotes 
+      : anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter))
+  })
 
   return (
     <ul>

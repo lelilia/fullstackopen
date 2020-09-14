@@ -1,6 +1,6 @@
 
 
-const reducer = (state = 'hello world', action) => {
+const reducer = (state = '', action) => {
   switch (action.type) {
     case 'ADD':
       const content = action.data.content
