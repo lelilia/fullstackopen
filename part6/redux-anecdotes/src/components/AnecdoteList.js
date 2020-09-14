@@ -1,11 +1,11 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { sortAnecdotes, vote } from '../reducers/anecdoteReducer'
+import { hideNotification, sortAnecdotes, vote } from '../actionTypes'
 import Anecdote from './Anecdote'
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
 
   return (
     <ul>
@@ -14,7 +14,10 @@ const AnecdoteList = () => {
           key={anecdote.id}
           anecdote={anecdote}
           handleClick={
-            () => dispatch(vote(anecdote.id))
+            () => {
+              dispatch(vote(anecdote))
+              setTimeout(() => dispatch(hideNotification()), 5000)
+            }
           }
         />
       )}
