@@ -18,11 +18,11 @@ export const asObject = (anecdote) => {
 
 
 
-export const createAnecdote = (content) => {
+export const createAnecdote = (data) => {
 
   return {
     type: 'ADD',
-    data: asObject(content)
+    data
   }
 }
 
