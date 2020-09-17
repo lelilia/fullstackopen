@@ -7,12 +7,6 @@ const reducer = (state = [], action) => {
     case 'INIT':
       return action.data
     case 'VOTE': {
-      /*const id = action.data.id
-      const anecdoteToLike = state.find(a => a.id === id)
-      const changedAnecdote = {
-        ...anecdoteToLike,
-        votes: anecdoteToLike.votes + 1
-      }*/
       const id = action.data.id
       const changedAnecdote = action.data
       return state.map(anecdote =>

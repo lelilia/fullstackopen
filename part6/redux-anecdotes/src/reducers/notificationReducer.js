@@ -2,11 +2,10 @@
 
 const reducer = (state = '', action) => {
   switch (action.type) {
-    case 'ADD':
-      const content = action.data.content
-      return `you added '${content}'`
-    case 'VOTE':
-      return `you voted '${action.data.content}'`
+    case 'SHOW':
+      const text = action.data
+      return text
+    
     case 'REMOVE':
       return ''
     default:

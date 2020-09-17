@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { hideNotification, sortAnecdotes, vote } from '../actionTypes'
+import { showNotificationWithTimeOut, sortAnecdotes, vote } from '../actionTypes'
 import Anecdote from './Anecdote'
 
 const AnecdoteList = () => {
@@ -21,7 +21,7 @@ const AnecdoteList = () => {
           handleClick={
             () => {
               dispatch(vote(anecdote.id))
-              setTimeout(() => dispatch(hideNotification()), 5000)
+              dispatch(showNotificationWithTimeOut(`you voted '${anecdote.content}'`, 10))
             }
           }
         />

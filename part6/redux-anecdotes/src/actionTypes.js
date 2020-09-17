@@ -42,22 +42,6 @@ export const sortAnecdotes = (anecdotes) => {
   return (anecdotes.sort((a, b) => b.votes - a.votes))
 }
 
-export const votes = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
-  }
-}
-/*
-export const votes = (anecdote) => {
-  return async dispatch => {
-    const id = anecdote.id
-    const anecdoteToUpdate = 
-    const updatedAnecdote = await anecdoteService.update(id, anecdoteToUpdate)
-  }
-}
-*/
-
 export const vote = (id) => {
   return async dispatch => {
     const anecdoteToUpdate = store.getState().anecdotes.find(a => a.id === id)
@@ -67,5 +51,20 @@ export const vote = (id) => {
       type: 'VOTE',
       data: updatedAnecdote
     })
+  }
+}
+
+export const showNotificationWithTimeOut = (text, time) => {
+  return async dispatch => {
+    const timeInMillisec = time * 1000
+    dispatch({
+      type: 'SHOW',
+      data: text
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'REMOVE'
+      })
+    }, timeInMillisec)
   }
 }
