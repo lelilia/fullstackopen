@@ -11,6 +11,7 @@ const AnecdoteList = () => {
       : anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter))
   })
 
+
   return (
     <ul>
       {sortAnecdotes(anecdotes).map(anecdote =>
@@ -19,7 +20,7 @@ const AnecdoteList = () => {
           anecdote={anecdote}
           handleClick={
             () => {
-              dispatch(vote(anecdote))
+              dispatch(vote(anecdote.id))
               setTimeout(() => dispatch(hideNotification()), 5000)
             }
           }
