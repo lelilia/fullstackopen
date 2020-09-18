@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams, useHistory, Redirect, useRouteMatch
+  Switch, Route, Link, useHistory, Redirect, useRouteMatch
 } from "react-router-dom"
 
 
@@ -37,7 +37,6 @@ const Home = () => (
 )
 
 const Note = ({ note }) => {
-  const id = useParams().id
   
   return (
     <div>
