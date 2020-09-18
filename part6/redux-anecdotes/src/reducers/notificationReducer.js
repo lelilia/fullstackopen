@@ -3,7 +3,7 @@
 const reducer = (state = '', action) => {
   switch (action.type) {
     case 'SHOW':
-      const text = action.data.text
+      const text = action.data
       return text
     
     case 'REMOVE':

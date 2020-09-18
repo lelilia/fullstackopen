@@ -68,9 +68,7 @@ export const showNotificationWithTimeOut = (text, time) => {
     }, timeInMillisec)
     dispatch({
       type: 'SHOW',
-      data: {
-        text
-      }
+      data: text
     })
   }
 }
