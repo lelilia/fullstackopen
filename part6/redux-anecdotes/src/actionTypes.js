@@ -45,8 +45,8 @@ export const sortAnecdotes = (anecdotes) => {
 export const vote = (id) => {
   return async dispatch => {
     const anecdoteToUpdate = store.getState().anecdotes.find(a => a.id === id)
-    anecdoteToUpdate.votes = anecdoteToUpdate.votes + 1
-    const updatedAnecdote = await anecdoteService.update(id, anecdoteToUpdate)
+    const votedAnecdote = {...anecdoteToUpdate, votes: anecdoteToUpdate.votes + 1}
+    const updatedAnecdote = await anecdoteService.update(id, votedAnecdote)
     dispatch({
       type: 'VOTE',
       data: updatedAnecdote
