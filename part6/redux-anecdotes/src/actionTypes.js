@@ -57,14 +57,19 @@ export const vote = (id) => {
 export const showNotificationWithTimeOut = (text, time) => {
   return async dispatch => {
     const timeInMillisec = time * 1000
-    dispatch({
-      type: 'SHOW',
-      data: text
-    })
-    setTimeout(() => {
+    const oldTimeout = store.getState().timeoutId
+    window.clearTimeout(oldTimeout)
+    const timeoutId = setTimeout(() => {
       dispatch({
         type: 'REMOVE'
       })
     }, timeInMillisec)
+    dispatch({
+      type: 'SHOW',
+      data: {
+        text,
+        timeoutId
+      }
+    })
   }
 }
