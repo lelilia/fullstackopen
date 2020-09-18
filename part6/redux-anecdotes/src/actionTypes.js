@@ -45,7 +45,7 @@ export const sortAnecdotes = (anecdotes) => {
 export const vote = (id) => {
   return async dispatch => {
     const anecdoteToUpdate = store.getState().anecdotes.find(a => a.id === id)
-    const votedAnecdote = {...anecdoteToUpdate, votes: anecdoteToUpdate.votes + 1}
+    const votedAnecdote = { ...anecdoteToUpdate, votes: anecdoteToUpdate.votes + 1 }
     const updatedAnecdote = await anecdoteService.update(id, votedAnecdote)
     dispatch({
       type: 'VOTE',
@@ -53,13 +53,15 @@ export const vote = (id) => {
     })
   }
 }
-
+let timeoutId
 export const showNotificationWithTimeOut = (text, time) => {
   return async dispatch => {
     const timeInMillisec = time * 1000
-    const oldTimeout = store.getState().timeoutId
-    window.clearTimeout(oldTimeout)
-    const timeoutId = setTimeout(() => {
+    if (timeoutId) {
+
+      window.clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
       dispatch({
         type: 'REMOVE'
       })
@@ -67,8 +69,7 @@ export const showNotificationWithTimeOut = (text, time) => {
     dispatch({
       type: 'SHOW',
       data: {
-        text,
-        timeoutId
+        text
       }
     })
   }
