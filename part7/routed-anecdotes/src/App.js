@@ -92,9 +92,10 @@ const CreateNew = (props) => {
 
   const resetFields = (e) => {
     e.preventDefault()
-    content.reset()
-    author.reset()
-    info.reset()
+    const clear = {target: {value: ''}}
+    content.onChange(clear)
+    author.onChange(clear)
+    info.onChange(clear)
   }
   return (
     <div>
