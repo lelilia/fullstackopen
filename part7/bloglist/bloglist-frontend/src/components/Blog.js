@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { updateBlog, removeBlog } from '../actionTypes'
+import store from '../store'
 
-
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch()
+  const user = store.getState().user
   const userId = blog.user.id ? blog.user.id : blog.user
 
 

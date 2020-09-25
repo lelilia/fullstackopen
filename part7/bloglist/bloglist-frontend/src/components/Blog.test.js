@@ -2,7 +2,8 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
-
+import store from '../store'
+import { Provider } from 'react-redux'
 
 describe('<Blog />', () => {
   let component
@@ -22,7 +23,9 @@ describe('<Blog />', () => {
 
     mockLikeButton = jest.fn()
     component = render(
-      <Blog blog={blog} user={user} updateBlog={mockLikeButton} />
+      <Provider store = {store}>
+        <Blog blog={blog} user={user} updateBlog={mockLikeButton} />
+      </Provider>
     )
   })
 
@@ -53,6 +56,8 @@ describe('<Blog />', () => {
     const likeButton = component.getByText('like')
     fireEvent.click(likeButton)
     fireEvent.click(likeButton)
+    console.log(mockLikeButton.mock.calls)
+    console.log(mockLikeButton)
     expect(mockLikeButton.mock.calls).toHaveLength(2)
   })
 })

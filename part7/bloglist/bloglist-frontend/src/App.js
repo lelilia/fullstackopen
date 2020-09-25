@@ -6,7 +6,7 @@ import Loggedin from './components/Loggedin'
 import Notification from './components/Notification'
 import { useDispatch } from 'react-redux'
 import { initializeBlogs, showNotificationWithTimeOut } from './actionTypes'
-
+import store from './store'
 
 import './App.css'
 
@@ -18,7 +18,7 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
 
@@ -33,9 +33,12 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
       blogService.setToken(user.token)
-      setUser(user)
+      //setUser(user)
       setUsername('')
       setPassword('')
       dispatch(showNotificationWithTimeOut({
@@ -58,11 +61,15 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
-    setUser(null)
+    //setUser(null)
     dispatch(showNotificationWithTimeOut({
-      text: `${user.name} sucessfully logged out.`,
+      text: `${store.getState().user.name} sucessfully logged out.`,
       color: 'green'
     },10))
+    dispatch({
+      type: 'LOGOUT',
+      data: null
+    })
   }
 
 
@@ -71,17 +78,22 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      //setUser(user)
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
-
+  const user = store.getState().user
+  console.log('user', user === '')
   return (
     <div>
       <Notification />
       <h2>blogs</h2>
-      {user === null ?
+      {user === '' ?
         <LoginForm
           username={username}
           setUsername={setUsername}
