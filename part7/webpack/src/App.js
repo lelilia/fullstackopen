@@ -1,7 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import './index.css'
+import axios from 'axios'
+import PromisePolyfill from 'promise-polyfill'
 
-const App = () => (
-  <div>hello webpack</div>
-)
+if (!window.Promise) {
+  window.Promise = PromisePolyfill
+}
+
+const useNotes = (url) => {
+  const [notes, setNotes] = useState([])
+  useEffect(() => {
+    axios.get(url).then(response => {
+      setNotes(response.data)
+    })
+  },[url])
+  return notes
+}
+
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  const [values, setValues] = useState([])
+  const url ='https://blooming-atoll-75500.herokuapp.com/api/notes'
+  const notes = useNotes(BACKEND_URL)
+   
+  const handleClicks = () => {
+    setCounter(counter + 1)
+    setValues(values.concat(counter))
+  } 
+  return (
+    <div className="container">
+      hello webpack {counter} clicks
+      <button onClick={handleClicks}>
+        press
+      </button>
+      <div>{notes.length} notes on server {BACKEND_URL}</div>
+    </div>
+  )
+}
 
 export default App
