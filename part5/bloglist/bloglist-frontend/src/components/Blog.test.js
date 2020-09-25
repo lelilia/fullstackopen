@@ -55,4 +55,3 @@ describe('<Blog />', () => {
     expect(mockLikeButton.mock.calls).toHaveLength(2)
   })
 })
-

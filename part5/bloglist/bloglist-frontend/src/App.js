@@ -38,26 +38,26 @@ const App = () => {
     }
     catch (exception) {
       console.log('Wrong credentials')
-      displayMessage("wrong username or password", "red")
+      displayMessage('wrong username or password', 'red')
 
     }
   }
 
-  
+
 
   const updateBlog = (id) => {
 
     const blog = blogs.find(b => b.id === id)
-    
-    const changedBlog = { ...blog, likes: blog.likes + 1}
-  
+
+    const changedBlog = { ...blog, likes: blog.likes + 1 }
+
     blogService
       .update(id, changedBlog)
       .then(returnedBlog => {
         setBlogs(blogSort(blogs.map(blog => blog.id !== id ? blog : returnedBlog)))
       })
       .catch(error => {
-        displayMessage(error.response.data.error, "red")
+        displayMessage(error.response.data.error, 'red')
       })
   }
 
@@ -71,7 +71,7 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
       })
       .catch(error => {
-        displayMessage(error.response.data.error, "red")
+        displayMessage(error.response.data.error, 'red')
       })
   }
 
@@ -81,10 +81,10 @@ const App = () => {
       .remove(id)
       .then(() => {
         setBlogs(blogs.filter(blog => blog.id !== id))
-        
+
       })
       .catch(error => {
-        displayMessage(error.response.data.error, "red")
+        displayMessage(error.response.data.error, 'red')
       })
 
   }
@@ -112,7 +112,7 @@ const App = () => {
     }
   }, [])
 
-  const displayMessage = (message, color = "green") => {
+  const displayMessage = (message, color = 'green') => {
     setNotificationMessage({ message, color })
     setTimeout(() => setNotificationMessage(null), 5000)
   }
