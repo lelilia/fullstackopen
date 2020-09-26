@@ -1,5 +1,8 @@
 import blogService from './services/blogs'
+import userService from './services/users'
+import loginService from './services/login'
 import store from './store'
+
 
 let timeOutId
 export const showNotificationWithTimeOut = (text, time) => {
@@ -30,6 +33,15 @@ export const initializeBlogs = () => {
   }
 }
 
+export const initializeUsers = () => {
+  return async dispatch => {
+    const users = await userService.getAll()
+    dispatch({
+      type: 'GET_USERS',
+      data: users
+    })
+  }
+}
 
 export const createBlog = (content) => {
   return async dispatch => {
@@ -41,7 +53,7 @@ export const createBlog = (content) => {
     dispatch(showNotificationWithTimeOut({
       text: `sucessfully added ${newBlog.title} by ${newBlog.author}.`,
       color: 'green'
-    },5))
+    }, 5))
   }
 }
 
@@ -57,7 +69,7 @@ export const updateBlog = (id) => {
     })
     dispatch(showNotificationWithTimeOut({
       text: `you liked ${updatedBlog.title}.`
-    },5))
+    }, 5))
   }
 }
 
@@ -68,6 +80,55 @@ export const removeBlog = (id) => {
       type: 'REMOVE',
       data: id
     })
+    dispatch(showNotificationWithTimeOut({
+      text: 'sucessfully deleted'
+    }, 5))
   }
 }
 
+export const logUserIn = (username, password) => {
+  return async dispatch => {
+    try {
+      const user = await loginService.login({
+        username, password
+      })
+
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
+      await blogService.setToken(user.token)
+
+      dispatch(showNotificationWithTimeOut({
+        text: `${user.name} succesfully logged in`,
+        color: 'green'
+      }, 10))
+    }
+    catch (exception) {
+      console.log('Wrong credentials')
+      dispatch(showNotificationWithTimeOut({
+        text: 'wrong username or password',
+        color: 'red'
+      }, 10))
+
+    }
+  }
+}
+
+export const logUserOut = () => {
+  return async dispatch => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    blogService.setToken(null)
+    dispatch(showNotificationWithTimeOut({
+      text: 'sucessfully logged out.',
+      color: 'green'
+    }, 10))
+    dispatch({
+      type: 'LOGOUT',
+      data: null
+    })
+  }
+}

@@ -1,13 +1,22 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { logUserIn } from '../actionTypes'
+import { useHistory } from 'react-router-dom'
 
+const LoginForm = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-const LoginForm = ({ username, setUsername, handleLogin, password, setPassword }) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    dispatch(logUserIn(username, password))
+    history.push('/blogs')
+  }
 
   return(
     <div>
-
-      <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
         username
@@ -34,12 +43,5 @@ const LoginForm = ({ username, setUsername, handleLogin, password, setPassword }
     </div>
   )}
 
-LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  handleLogin: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired
-}
 
 export default LoginForm
